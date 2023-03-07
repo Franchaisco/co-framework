@@ -17,24 +17,36 @@
 #endif
 
 .text
-# your strings here
+        formatstring: .asciz "%ld"
 
 .global my_main                         # make my_main accessible globally
 .global my_increment                    # make my_increment accessible globally
 
 my_main:
-        # set up the stack frame
+        pushq %rbp
+        movq %rsp, %rbp
+        movq $0, %rax
+
 
         call    inout                
 
-        # clear the stack and return
+        movq $0, %rax
+        movq %rbp, %rsp
+        popq %rbp
+        ret
 
 inout:
-        # read input and increment it using my_increment
+        subq $8, %rsp
+        leaq -8(%rbp), %rsi
+        leaq formatstring(%rip), %rdi
+        movq $0, %rax
+        call scanf
 
         call    my_increment
 
-        # output incremented number
+        call printf
+        ret
 
 my_increment:
-        # IMPLEMENT ME
+        inc
+        ret
