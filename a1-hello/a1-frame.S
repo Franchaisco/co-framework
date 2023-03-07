@@ -3,18 +3,33 @@
 # * Description :                                                                 *
 # *********************************************************************************
 
-
-
+#ifndef MACOS
+.ifndef CODEGRADE
+    .global main
+    main: jmp my_main
+.endif
+#else
     .global _main
     _main: jmp my_main
     printf: jmp _printf
     exit: jmp _exit
-
+#endif
 
 .text
-# your strings here
+line: .asciz "Tim de Visser - 2787127, Francis Babila Niba - 2776287, a1\n"
+
+   
 
 .global my_main                         # make my_main accessible globally
 
 my_main:
-	# IMPLEMENT ME    
+    pushq %rbp
+    movq %rsp , %rbp
+    movq $0, %rax
+    leaq line(%rip), %rdi
+    call printf
+    
+    movq $0, %rax
+    movq %rbp , %rsp
+    popq %rbp
+    ret
