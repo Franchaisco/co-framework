@@ -17,7 +17,7 @@
 #endif
 
 .text
-# your strings here
+formatstring: asciz "%ld"
 
 .global my_main
 .global my_pow
@@ -25,6 +25,15 @@
 
 my_main:
         # IMPLEMENT ME
+        pushq %rbp
+        movq %rsp, %rbp
+        movq $0, %rax
+        subq $16, %rsp
+        leaq -16(%rbp), %rsi
+        leaq formatstring(%rip), %rdi
+        call scanf
+        movq %rdi, %rax
+
 
 my_pow:
         # IMPLEMENT ME

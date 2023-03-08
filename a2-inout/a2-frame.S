@@ -27,25 +27,39 @@ my_main:
         movq %rsp, %rbp
         movq $0, %rax
 
-
-        call    inout                
-
+        call    inout  
+        movq %rax, %rsi
+        leaq formatstring(%rip), %rdi              
+        call printf
         movq $0, %rax
         movq %rbp, %rsp
         popq %rbp
         ret
 
 inout:
-        subq $8, %rsp
-        leaq -8(%rbp), %rsi
+        pushq %rbp
+        movq %rsp, %rbp
+
+        subq $16, %rsp
+        leaq -16(%rbp), %rsi
         leaq formatstring(%rip), %rdi
         movq $0, %rax
         call scanf
 
-        # call    my_increment
+        movq -16(%rbp), %rdi
+        call    my_increment
 
-        call printf
+        movq %rbp, %rsp
+        popq %rbp
         ret
 
 my_increment:
+        pushq %rbp
+        movq %rsp, %rbp
+
+        movq %rdi, %rax
+        incq %rax
+
+        movq %rbp, %rsp
+        popq %rbp
         ret
