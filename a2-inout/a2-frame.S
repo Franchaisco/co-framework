@@ -42,11 +42,10 @@ inout:
         movq $0, %rax
         call scanf
 
-        call    my_increment
+        # call    my_increment
 
         call printf
         ret
 
 my_increment:
-        inc
         ret
