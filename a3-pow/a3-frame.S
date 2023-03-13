@@ -37,17 +37,19 @@ my_main:
         call scanf
 
         subq $32, %rsp
-        leaq -32(%rbp), %rcx
-        leaq formatstring(%rip), %rdx
+        leaq -32(%rbp), %rsi
+        leaq formatstring(%rip), %rdi
         movq $0, %rax
         call scanf
 
         movq -16(%rbp), %rdi
-        movq -32(%rbp), %rdx
+        movq -32(%rbp), %rsi
         call my_pow
+
         movq %rax, %rsi
         leaq formatstring(%rip), %rdi
         call printf
+
         movq $0, %rax
         movq %rbp, %rsp
         popq %rbp
@@ -58,33 +60,19 @@ my_pow:
     # IMPLEMENT ME
     pushq %rbp
     movq %rsp, %rbp
-    movq $0, %rax
-    cmpq $0, %rdx
-    je pow_zero
-    call raise_number
-    movq %rbp, %rsp
-    popq %rbp
-    ret
-
-pow_zero:
-    pushq %rbp
-    movq %rsp, %rbp
-    movq %r8, %rax
-    movq %rax, %rsi
-    leaq formatstring(%rip), %rdi              
-    call printf
-    movq $0, %rax
-    movq %rbp, %rsp
-    popq %rbp
-    ret
+    movq %rdi, %rdx
+    movq %rsi, %rcx
+    movq $1, %rax
+    cmpq $0, %rcx
+    je end
 
 raise_number:
-    pushq %rbp
-    movq %rsp, %rbp
-    imul %rdi, %r8
-    dec %rdx
-    cmpq $0, %rdx
+    imul %rdx, %rax
+    dec %rcx
+    cmpq $0, %rcx
     jg raise_number
+
+end:
     movq %rbp, %rsp
     popq %rbp
     ret
