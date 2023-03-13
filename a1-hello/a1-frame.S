@@ -16,7 +16,7 @@
 #endif
 
 .text
-line: .asciz "Tim de Visser - 2787127, Francis Babila Niba - 2776287, a1\n"
+line: .asciz "Assignment 1\n"
 
    
 

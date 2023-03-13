@@ -23,34 +23,32 @@ formatstring: .asciz "%ld"
 .global my_pow
 
 
+
 my_main:
         # IMPLEMENT ME
         pushq %rbp
         movq %rsp, %rbp
         movq $0, %rax
 
-        subq $8, %rsp
-        leaq -8(%rbp), %rsi
-
-        leaq formatstring(%rip), %rdi
-        call scanf
-
         subq $16, %rsp
         leaq -16(%rbp), %rsi
-
         leaq formatstring(%rip), %rdi
+        movq $0, %rax
         call scanf
 
-        movq -8(%rbp), %rdi
-        movq -16(%rbp), %rsi
+        subq $32, %rsp
+        leaq -32(%rbp), %rcx
+        leaq formatstring(%rip), %rdx
         movq $0, %rax
-        movq $0, %rbx
+        call scanf
+
+        movq -16(%rbp), %rdi
+        movq -32(%rbp), %rdx
         call my_pow
         movq %rax, %rsi
         leaq formatstring(%rip), %rdi
         call printf
         movq $0, %rax
-        movq $0, %rbx
         movq %rbp, %rsp
         popq %rbp
         ret
@@ -61,11 +59,32 @@ my_pow:
     pushq %rbp
     movq %rsp, %rbp
     movq $0, %rax
-    movq $0, %rbx
-    movq %rdi, %rax
-    movq %rsi, %rbx
-    addq %rbx, %rax
+    cmpq $0, %rdx
+    je pow_zero
+    call raise_number
+    movq %rbp, %rsp
+    popq %rbp
+    ret
 
+pow_zero:
+    pushq %rbp
+    movq %rsp, %rbp
+    movq %r8, %rax
+    movq %rax, %rsi
+    leaq formatstring(%rip), %rdi              
+    call printf
+    movq $0, %rax
+    movq %rbp, %rsp
+    popq %rbp
+    ret
+
+raise_number:
+    pushq %rbp
+    movq %rsp, %rbp
+    imul %rdi, %r8
+    dec %rdx
+    cmpq $0, %rdx
+    jg raise_number
     movq %rbp, %rsp
     popq %rbp
     ret
