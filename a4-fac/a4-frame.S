@@ -17,7 +17,7 @@
 #endif
 
 .text
-# your strings here
+input: .asciz "%ld"
 
 .global my_main
 .global factorial
@@ -28,9 +28,9 @@ my_main:
         pushq %rbp
         movq %rsp, %rbp
         movq $0, %rax
+        call inout
+        jmp end
 
-factorial:
-        # IMPLEMENT ME
 
 inout:
         pushq %rbp
@@ -38,19 +38,40 @@ inout:
 
         subq $16, %rsp
         leaq -16(%rbp), %rsi
-        leaq formatstring(%rip), %rdi
+        leaq input(%rip), %rdi
         movq $0, %rax
         call scanf
 
         movq -16(%rbp), %rdi
-        call    my_increment
+        call factorial
 
+        movq $0, %rax
+        movq %rbp, %rsp
+        popq %rbp
+        ret
+
+factorial:
+        # IMPLEMENT ME
+        pushq %rbp
+        movq %rsp, %rbp
+        movq %rdi, %rdx
+        movq $1, %rax
+        imul %rdx, %rax
+        decq %rdx
+        cmpq $0, %rdx
+        je end
+        call factorial
         movq %rbp, %rsp
         popq %rbp
         ret
 
 
+
+
 end:
+        movq %rax, %rsi
+        leaq input(%rip), %rdi
+        call printf
         movq $0, %rax
         movq %rbp, %rsp
         popq %rbp
