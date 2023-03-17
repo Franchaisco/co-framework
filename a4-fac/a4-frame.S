@@ -28,8 +28,23 @@ my_main:
         pushq %rbp
         movq %rsp, %rbp
         movq $0, %rax
+        
         call inout
-        jmp end
+
+        movq %rax, %rdi
+        call factorial
+
+        movq %rax, %rsi
+        leaq input(%rip), %rdi
+        call printf
+
+        movq $0, %rax
+        movq %rbp, %rsp
+        popq %rbp
+        ret
+
+        
+
 
 
 inout:
@@ -42,10 +57,8 @@ inout:
         movq $0, %rax
         call scanf
 
-        movq -16(%rbp), %rdi
-        call factorial
+        movq -16(%rbp), %rax
 
-        movq $0, %rax
         movq %rbp, %rsp
         popq %rbp
         ret
@@ -54,13 +67,18 @@ factorial:
         # IMPLEMENT ME
         pushq %rbp
         movq %rsp, %rbp
-        movq %rdi, %rdx
-        movq $1, %rax
-        imul %rdx, %rax
-        decq %rdx
-        cmpq $0, %rdx
-        je end
+
+        cmpq $1, %rdi
+        jle end
+
+        pushq %rdi
+        subq $1, %rdi
+
         call factorial
+
+        popq %rdi
+        imulq %rdi, %rax
+
         movq %rbp, %rsp
         popq %rbp
         ret
@@ -69,10 +87,8 @@ factorial:
 
 
 end:
-        movq %rax, %rsi
-        leaq input(%rip), %rdi
-        call printf
-        movq $0, %rax
+        movq $1, %rax
+
         movq %rbp, %rsp
         popq %rbp
         ret
