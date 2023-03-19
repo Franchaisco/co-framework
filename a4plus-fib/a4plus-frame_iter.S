@@ -21,14 +21,38 @@
 #endif
 
 .text
-# your strings here
+    input: .asciz "%ld"
 
 .global my_main
 .global fibonacci
 
 
 my_main:
-        # IMPLEMENT ME
+        pushq %rbp
+        movq %rsp, %rbp
+        movq $0, %rax
+
+        call inout
+
+
+inout:
+        pushq %rbp
+        movq %rsp, %rbp
+
+        subq $16, %rsp
+        leaq -16(%rbp), %rsi
+        leaq input(%rip), %rdi
+        movq $0, %rax
+        call scanf
+
+        movq -16(%rbp), %rdi
+        call    fibonacci
+
+        movq %rbp, %rsp
+        popq %rbp
+        ret
 
 fibonacci:
-        # IMPLEMENT ME
+        pushq %rbp
+        movq %rsp, %rbp
+        movq %rdi, %rax
