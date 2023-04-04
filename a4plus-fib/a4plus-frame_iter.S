@@ -56,3 +56,6 @@ fibonacci:
         pushq %rbp
         movq %rsp, %rbp
         movq %rdi, %rax
+        movq $0, %rdx
+        movq $1, %rcx
+        
